@@ -8,19 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('detox_sessions', function (Blueprint $table) {
+        Schema::create('goal_progress', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('goal_id')->constrained()->cascadeOnDelete();
             $table->date('date');
-            $table->integer('duration_minutes')->default(0);
+            $table->boolean('is_completed')->default(true);
             $table->timestamps();
 
-            $table->unique(['user_id', 'date']);
+            $table->unique(['goal_id', 'date']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('detox_sessions');
+        Schema::dropIfExists('goal_progress');
     }
 };

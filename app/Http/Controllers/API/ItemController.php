@@ -22,8 +22,8 @@ class ItemController extends Controller
                 'last_page' => $items->lastPage(),
                 'per_page' => $items->perPage(),
                 'total' => $items->total(),
-                'next_page_url' => $items->nextPageUrl(),  // <-- Next page link
-                'prev_page_url' => $items->previousPageUrl() // <-- Previous page link
+                'next_page_url' => $items->nextPageUrl(),      // <-- Next page link
+                'prev_page_url' => $items->previousPageUrl()  // <-- Previous page link
             ],
             'data' => $items->items()
         ]);

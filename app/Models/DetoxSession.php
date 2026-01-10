@@ -2,41 +2,23 @@
 
 namespace App\Models;
 
+use App\Traits\Favoritable;
 use Illuminate\Database\Eloquent\Model;
 
 class DetoxSession extends Model
 {
-    protected $fillable = ['user_id', 'duration_minutes', 'started_at', 'ended_at'];
-
-    protected $casts = [
-        'started_at' => 'datetime',
-        'ended_at'   => 'datetime',
+    use Favoritable;
+    protected $fillable = [
+        'user_id',
+        'date',
+        'duration_minutes',
     ];
 
-    public function user()
+    protected $appends = ['progress_percent'];
+
+    public function getProgressPercentAttribute()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    // Helper: remaining seconds calculate
-    public function getRemainingSecondsAttribute()
-    {
-        if ($this->ended_at) {
-            return 0;
-        }
-
-        $endTime = $this->started_at->addMinutes($this->duration_minutes);
-        $remaining = $endTime->diffInSeconds(now());
-
-        return max(0, $remaining);
-    }
-
-    // Active session check
-    public static function getActiveForUser($userId)
-    {
-        return self::where('user_id', $userId)
-            ->whereNull('ended_at')
-            ->latest()
-            ->first();
+        $goal = 420; // weekly / daily goal changeable
+        return min(100, round(($this->duration_minutes / $goal) * 100));
     }
 }
