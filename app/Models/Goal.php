@@ -12,7 +12,7 @@ class Goal extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'category_id', 
+        'category_id',
         'goal_type',
         'start_date',
         'end_date',
@@ -36,5 +36,9 @@ class Goal extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

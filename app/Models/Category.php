@@ -9,10 +9,18 @@ class Category extends Model
 {
     use Favoritable;
 
-    protected $fillable = ['name','slug'];
+    protected $fillable = ['name', 'slug'];
 
     public function meditations()
     {
         return $this->hasMany(Meditation::class);
+    }
+    public function journals()
+    {
+        return $this->hasMany(Journal::class);
+    }
+    public function goals()
+    {
+        return $this->hasMany(Goal::class);
     }
 }

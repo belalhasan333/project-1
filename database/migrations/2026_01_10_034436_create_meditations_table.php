@@ -10,12 +10,13 @@ return new class extends Migration
     {
         Schema::create('meditations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('cover_image');
             $table->string('audio');
-            $table->integer('duration'); // seconds
+            $table->integer('duration');
             $table->timestamps();
         });
     }

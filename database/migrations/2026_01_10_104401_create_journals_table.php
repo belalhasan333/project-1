@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('journals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+
             $table->string('title');
-            $table->string('short_title');
+            $table->date('date');
             $table->text('description')->nullable();
-            $table->boolean('is_favorite')->default(false);
-            $table->index('is_favorite');
+
+            $table->string('voice_note')->nullable();
+            $table->json('images')->nullable();
 
             $table->timestamps();
         });
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('journals');
     }
 };

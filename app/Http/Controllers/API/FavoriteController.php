@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Favorite;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
+
 
 class FavoriteController extends Controller
 {
     public function toggle(Request $request)
     {
         $request->validate([
-            'type' => 'required|string', // Item, Meditation, Quote
+            'type' => 'required|string',
             'id' => 'required|integer'
         ]);
 
         $modelClass = "App\\Models\\" . $request->type;
 
         if (!class_exists($modelClass)) {
-            return response()->json(['message'=>'Invalid type'],400);
+            return response()->json(['message' => 'Invalid type'], 400);
         }
 
         $model = $modelClass::findOrFail($request->id);
@@ -31,7 +32,7 @@ class FavoriteController extends Controller
 
         if ($favorite) {
             $favorite->delete();
-            return response()->json(['favorited'=>false]);
+            return response()->json(['favorited' => false]);
         }
 
         Favorite::create([
@@ -40,7 +41,6 @@ class FavoriteController extends Controller
             'favoritable_type' => $modelClass
         ]);
 
-        return response()->json(['favorited'=>true]);
+        return response()->json(['favorited' => true]);
     }
 }
-

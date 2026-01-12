@@ -11,11 +11,11 @@ class UserNotification extends Notification
 {
     use Queueable;
 
-    public $message;
+    public $data;
 
-    public function __construct($message)
+    public function __construct($data)
     {
-        $this->message = $message;
+        $this->data = $data;
     }
 
     public function via($notifiable)
@@ -26,9 +26,7 @@ class UserNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => $this->message,
+            'message' => $this->data,
         ];
     }
 }
-
-

@@ -2,28 +2,30 @@
 
 namespace App\Models;
 
-use App\Traits\Favoritable;
 use Illuminate\Database\Eloquent\Model;
 
-class Meditation extends Model
+class Journal extends Model
 {
-    use Favoritable;
-
     protected $fillable = [
         'user_id',
         'category_id',
         'title',
-        'slug',
-        'cover_image',
-        'audio',
-        'duration'
+        'date',
+        'description',
+        'voice_note',
+        'images',
     ];
 
-    // Relation with Category
+    protected $casts = [
+        'images' => 'array',
+        'date' => 'date',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);

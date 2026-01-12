@@ -11,8 +11,19 @@ class Item extends Model
 
     protected $fillable = [
         'title',
+        'user_id',
         'short_title',
         'description',
         'is_favorite'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

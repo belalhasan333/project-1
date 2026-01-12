@@ -16,18 +16,7 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        $notifications = $user->notifications()
-            ->latest()
-            ->get()
-            ->map(function ($notification) {
-                return [
-                    'id' => $notification->id,
-                    'data' => $notification->data,
-                    'is_read' => $notification->read_at ? true : false,
-                    'read_at' => $notification->read_at,
-                    'created_at' => $notification->created_at,
-                ];
-            });
+        $allNotifications = $user->notifications()->latest()->get();
 
         return response()->json([
             'status' => true,
@@ -35,21 +24,17 @@ class NotificationController extends Controller
             'code' => 200,
             'data' => [
                 'has_unread_notifications' => $user->unreadNotifications()->exists(),
-                'notifications' => $user->notifications()
-                    ->latest()
-                    ->get()
-                    ->map(function ($notification) {
-                        return [
-                            'id' => $notification->id,
-                            'type' => $notification->type,
-                            'notifiable_type' => $notification->notifiable_type,
-                            'notifiable_id' => $notification->notifiable_id,
-                            'data' => $notification->data,
-                            'read_at' => $notification->read_at,
-                            'created_at' => $notification->created_at,
-                            'updated_at' => $notification->updated_at,
-                        ];
-                    }),
+                'notifications' => $allNotifications->map(fn($n) => [
+                    'id' => $n->id,
+                    'type' => $n->type,
+                    'notifiable_type' => $n->notifiable_type,
+                    'notifiable_id' => $n->notifiable_id,
+                    'data' => $n->data,
+                    'is_read' => $n->read_at ? true : false,
+                    'read_at' => $n->read_at,
+                    'created_at' => $n->created_at,
+                    'updated_at' => $n->updated_at,
+                ]),
             ],
         ], 200);
     }
@@ -107,8 +92,8 @@ class NotificationController extends Controller
 
         $data = [
             'title' => 'New Content Uploaded',
-            'message' => 'You have a new notification',
-            'url' => url('/'),
+            'body'  => 'You have a new notification',
+            'url'   => url('/'),
         ];
 
         Notification::send($users, new UserNotification($data));

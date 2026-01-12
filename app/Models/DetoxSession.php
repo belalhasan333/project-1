@@ -21,4 +21,8 @@ class DetoxSession extends Model
         $goal = 420; // weekly / daily goal changeable
         return min(100, round(($this->duration_minutes / $goal) * 100));
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

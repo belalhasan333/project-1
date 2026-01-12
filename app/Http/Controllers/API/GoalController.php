@@ -17,7 +17,7 @@ class GoalController extends Controller
 
         $goals = Goal::where('user_id', auth()->id())
             ->where('status', $status)
-            ->with('category') // eager load category
+            ->with('category')
             ->withCount('progress')
             ->get()
             ->map(function ($goal) {
@@ -42,8 +42,9 @@ class GoalController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'user_id' => 'required',
             'title' => 'required|string',
-            'category_id' => 'required|exists:categories,id', // updated to foreign key
+            'category_id' => 'required|exists:categories,id',
             'goal_type' => 'required|in:daily,weekly,monthly',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
@@ -66,7 +67,7 @@ class GoalController extends Controller
     {
         $this->authorizeGoal($goal);
 
-        $goal->load('category'); // load category relation
+        $goal->load('category');  // load category relation
 
         $totalDays = $goal->start_date->diffInDays($goal->end_date) + 1;
         $completedDays = $goal->progress()->count();
@@ -128,9 +129,6 @@ class GoalController extends Controller
 
     private function authorizeGoal(Goal $goal)
     {
-        if ($goal->user_id !== auth()->id()) {
-            return response()->json([], 403)->send();
-            exit;
-        }
+        abort_if($goal->user_id !== auth()->id(), 403, 'Unauthorized');
     }
 }
